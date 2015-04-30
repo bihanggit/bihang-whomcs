@@ -1,10 +1,10 @@
 <?php
 
-include '../../../dbconnect.php';
-include '../../../includes/functions.php';
-include '../../../includes/gatewayfunctions.php';
-include '../../../includes/invoicefunctions.php';
-require '/lib/Oklink.php';
+include './../../../dbconnect.php';
+include './../../../includes/functions.php';
+include './../../../includes/gatewayfunctions.php';
+include './../../../includes/invoicefunctions.php';
+require './lib/Oklink.php';
 
 $gatewaymodule = "oklink";
 $GATEWAY = getGatewayVariables($gatewaymodule);
@@ -29,16 +29,15 @@ if ($status != 'Unpaid') {
     die('bad invoice status');
 }
 
-if ( in_array($currency,array('BTC', 'USD', 'CNY') == false) {
-    error_log("{$currency} is not support,Oklink support BTC/USD/CNY only");
-    die('Oklink support BTC/USD/CNY only');
-}
-
+// if ( in_array($currency,array('BTC', 'USD', 'CNY')==false ) {
+//     error_log("{$currency} is not support,Oklink support BTC/USD/CNY only");
+//     die('Oklink support BTC/USD/CNY only');
+// }
 
 $params = array();
 
-$params['name']              = 'Order #'.$invoiceId,
-$params['price']             = $price,
+$params['name']              = 'Order #'.$invoiceId;
+$params['price']             = $price;
 $params['price_currency']    = $currency;
 $params['callback_url']      = $_POST['systemURL'].'/modules/gateways/callback/oklink.php';
 $params['success_url']       = $_POST['systemURL'];
@@ -48,7 +47,7 @@ $response = $client->buttonsButton($params);
 
 if ( $response && $response->button) {
     $url = OklinkBase::WEB_BASE.'merchant/mPayOrderStemp1.do?buttonid='.$response->button->id;
-    header("Location: ".$invoice['url']);
+    header("Location: ".$url);
 } else {
-    error_log(var_dump($response));   
+    error_log(var_dump($response));
 }
