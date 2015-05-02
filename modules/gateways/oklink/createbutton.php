@@ -34,6 +34,32 @@ if ($status != 'Unpaid') {
 //     die('Oklink support BTC/USD/CNY only');
 // }
 
+$convertTo = false;
+$query     = "SELECT value from tblpaymentgateways where `gateway` = '$gatewaymodule' and `setting` = 'convertto'";
+$result    = mysql_query($query);
+$data      = mysql_fetch_assoc($result);
+if ($data) {
+    $convertTo = $data['value'];
+}
+if ($convertTo) {
+    // fetch $currency and $convertTo currencies
+    $query           = "SELECT rate FROM tblcurrencies where `code` = '$currency'";
+    $result          = mysql_query($query);
+    $currentCurrency = mysql_fetch_assoc($result);
+    if (!$currentCurrency) {
+        bpLog('[ERROR] In modules/gateways/bitpay/createinvoice.php: Invalid invoice currency of ' . $currency);
+        die('[ERROR] In modules/gateways/bitpay/createinvoice.php: Invalid invoice currency of ' . $currency);
+    }
+    $result            = mysql_query("SELECT code, rate FROM tblcurrencies where `id` = $convertTo");
+    $convertToCurrency = mysql_fetch_assoc($result);
+    if (!$convertToCurrency) {
+        bpLog('[ERROR] In modules/gateways/bitpay/createinvoice.php: Invalid convertTo currency of ' . $convertTo);
+        die('[ERROR] In modules/gateways/bitpay/createinvoice.php: Invalid convertTo currency of ' . $convertTo);
+    }
+    $currency = $convertToCurrency['code'];
+    $price    = $price / $currentCurrency['rate'] * $convertToCurrency['rate'];
+}
+
 $params = array();
 
 $params['name']              = 'Order #'.$invoiceId;
