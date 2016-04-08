@@ -3,19 +3,19 @@
 /**
  * @return array
  */
-function oklink_config()
+function bihang_config()
 {
     $configarray = array(
         "FriendlyName" => array(
             "Type" => "System",
-            "Value"=> "Oklink"
+            "Value"=> "Bihang"
         ),
         'apiKey' => array(
-            'FriendlyName' => 'API Key from your oklink.com account.',
+            'FriendlyName' => 'API Key from your bihang.com account.',
             'Type'         => 'text'
         ),
         'apiSecret' => array(
-            'FriendlyName' => 'API Secret from your oklink.com account.',
+            'FriendlyName' => 'API Secret from your bihang.com account.',
             'Type'         => 'text'
         ),
     );
@@ -28,7 +28,7 @@ function oklink_config()
  *
  * @return string
  */
-function oklink_link($params)
+function bihang_link($params)
 {
     # Invoice Variables
     $invoiceid = $params['invoiceid'];
@@ -62,7 +62,7 @@ function oklink_link($params)
         'buyerPhone'    => $phone,
     );
 
-    $form = '<form action="'.$systemurl.'/modules/gateways/oklink/createbutton.php" method="POST">';
+    $form = '<form action="'.$systemurl.'/modules/gateways/bihang/createbutton.php" method="POST">';
 
     foreach ($post as $key => $value) {
         $form.= '<input type="hidden" name="'.$key.'" value = "'.$value.'" />';

@@ -7,16 +7,16 @@ include './../../../includes/functions.php';
 include './../../../includes/gatewayfunctions.php';
 include './../../../includes/invoicefunctions.php';
 
-require_once './../oklink/lib/Oklink.php';
+require_once './../bihang/lib/Bihang.php';
 
-$gatewaymodule = "oklink";
+$gatewaymodule = "bihang";
 $GATEWAY       = getGatewayVariables($gatewaymodule);
 if (!$GATEWAY["type"]) {
     logTransaction($GATEWAY["name"], $_POST, 'Not activated');
-    die("Oklink module not activated");
+    die("bihang module not activated");
 }
 
-$client = Oklink::withApiKey($GATEWAY['apiKey'], $GATEWAY['apiSecret']);
+$client = Bihang::withApiKey($GATEWAY['apiKey'], $GATEWAY['apiSecret']);
 
 if ( $client->checkCallback() ){
     $response = json_decode(file_get_contents('php://input'));
